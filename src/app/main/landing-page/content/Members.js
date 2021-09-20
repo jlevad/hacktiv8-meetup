@@ -1,9 +1,33 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import {
   Typography,
   Card
 } from '@material-ui/core';
 
 const Members = () => {
+
+  const [datas, setDatas] = useState([]);
+  const [totalDatas, setTotalDatas] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getData = () => {
+    axios.get('https://swapi.dev/api/people/')
+    .then((response) => {
+      setDatas(response.data.results);
+      setTotalDatas(response.data.count);
+    })
+    .catch((error) => {
+      console.log(error);
+      setDatas([]);
+      setLoading(false);
+    })
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <Card>
       <div className="p-4 bg-gray-300 flex">
@@ -17,10 +41,11 @@ const Members = () => {
           </Typography>
           <div className="flex justify-between">
             <Typography>
-              Adhy Wiranata
+              {datas.length !== 0 ?
+               datas[0].name : '-'}
             </Typography>
             <Typography>
-              4 Others
+              And {parseInt(totalDatas) - 1} Others
             </Typography>
           </div>
         </div>
