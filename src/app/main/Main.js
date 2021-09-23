@@ -1,19 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import { Route, Switch, Link, BrowserRouter as Router, NavLink } from 'react-router-dom';
 import LandingPage from './landing-page/LandingPage';
-
-const a11yProps = (index) => {
-  return {
-    id: `scrollable-auto-tab-${index}`,
-    'aria-controls': `scrollable-auto-tabpanel-${index}`,
-  };
-}
+import CreateMeetupsPage from './landing-page/CreateMeetups';
+import ExplorePage from './landing-page/Explore';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,67 +16,51 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TabPanel = (props) => {
-  const { children, value, index, ...other } = props;
 
+
+const LinkTabs = (props) => {
+  const { link, label, activeLink } = props;
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`scrollable-auto-tabpanel-${index}`}
-      aria-labelledby={`scrollable-auto-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+    <div className="p-6 hover:text-blue-400 transition-all ease-in-out duration-300">
+      <NavLink exact to={link} activeClassName={activeLink} >
+        <Typography
+          variant="h6"
+        >
+          {label}
+        </Typography>
+      </NavLink>
     </div>
-  );
+  )
 }
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
+LinkTabs.propTypes = {
+  link: PropTypes.isRequired,
+  activeLink: PropTypes.string,
+  label: PropTypes.isRequired,
 };
-
 
 const Main = () => {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+ 
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="auto"
-          aria-label="scrollable auto tabs example"
-        >
-          <Tab label="QTemu" {...a11yProps(0)} />
-          <Tab label="Create Meetup" {...a11yProps(1)} />
-          <Tab label="Explore" {...a11yProps(2)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-        <LandingPage />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Create Meetup
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        Explore
-      </TabPanel>
+      <Router>
+        <AppBar position="fixed" color="default">
+          <div className="flex flex-row">
+            <LinkTabs link="/" label="HOME" activeLink="text-blue-500" />
+            <LinkTabs link="/create-meetups" label="CREATE MEETUPS" activeLink="text-blue-500" />
+            <LinkTabs link="/explore" label="EXPLORE" activeLink="text-blue-500" />
+          </div>
+        </AppBar>
+        <Switch>
+          <div className="mt-28 mx-6">
+            <Route exact path="/" component={LandingPage} />
+            <Route path="/create-meetups" component={CreateMeetupsPage} />
+            <Route path="/explore" component={ExplorePage} />
+          </div>
+        </Switch>
+      </Router>
     </div>
   );
 }

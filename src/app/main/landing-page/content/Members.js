@@ -13,19 +13,20 @@ const Members = () => {
 
   const getData = () => {
     axios.get('https://swapi.dev/api/people/')
-    .then((response) => {
-      setDatas(response.data.results);
-      setTotalDatas(response.data.count);
-    })
-    .catch((error) => {
-      console.log(error);
-      setDatas([]);
-      setLoading(false);
-    })
+      .then((response) => {
+        setDatas(response.data.results);
+        setTotalDatas(response.data.count);
+      })
+      .catch((error) => {
+        console.log(error);
+        setDatas([]);
+        setLoading(false);
+      })
   }
 
-  useEffect(() => {
-    getData();
+  useEffect(async () => {
+    await getData();
+    setLoading(false);
   }, []);
 
   return (
@@ -41,8 +42,10 @@ const Members = () => {
           </Typography>
           <div className="flex justify-between">
             <Typography>
-              {datas.length !== 0 ?
-               datas[0].name : '-'}
+              {loading
+                ? 'Loading....'
+                : datas.length !== 0
+                  ? datas[0].name : 'Data Tidak Ditemukan'}
             </Typography>
             <Typography>
               And {parseInt(totalDatas) - 1} Others
