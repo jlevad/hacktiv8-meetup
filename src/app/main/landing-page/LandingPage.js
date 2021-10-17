@@ -1,6 +1,4 @@
 import React from "react";
-import { Provider } from "react-redux";
-import { store } from "../../state/store";
 import FooterPage from "./Footer";
 import Banner from "./Banner";
 import ContentPage from "./content/ContentPage";
@@ -24,9 +22,7 @@ const LandingPage = () => {
         <AboutContent />
       </ContentPage>
       <ContentPage value="Members">
-        <Provider store={store}>
-          <Members />
-        </Provider>
+        <Members />
       </ContentPage>
       <ContentPage value="Past Meetups">
         <div className="grid grid-cols-3">

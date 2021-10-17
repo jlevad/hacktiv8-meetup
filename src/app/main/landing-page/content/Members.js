@@ -2,35 +2,18 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Typography, Card, Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
-import { bindActionCreators } from "redux";
-import { actionCreator } from "../../../state";
+import { getListMember } from "../../../state/action-creator/MemberActions";
+import ShowMembers from "./ShowMembers";
 
 const Members = () => {
-  const countMember = useSelector((data) => data.member);
   const dispatch = useDispatch();
-  const { addMember }= bindActionCreators(actionCreator, dispatch);
-  const [datas, setDatas] = useState([]);
-  const [totalDatas, setTotalDatas] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { getListMemberSuccess, getListMemberError, getListMemberLoading } =
+    useSelector((state) => state.member);
+  const [displayMember, setDisplayMember] = useState(false);
 
-  const getData = () => {
-    axios
-      .get("https://swapi.dev/api/people/")
-      .then((response) => {
-        setDatas(response.data.results);
-        setTotalDatas(response.data.count);
-      })
-      .catch((error) => {
-        console.log(error);
-        setDatas([]);
-        setLoading(false);
-      });
-  };
-
-  useEffect(async () => {
-    await getData();
-    setLoading(false);
-  }, []);
+  useEffect(() => {
+    dispatch(getListMember());
+  }, [dispatch]);
 
   return (
     <Card>
@@ -40,23 +23,29 @@ const Members = () => {
           <Typography variant="h5">Organizers</Typography>
           <div className="flex justify-between">
             <Typography>
-              {loading
-                ? "Loading...."
-                : datas.length !== 0
-                ? datas[0].name
-                : "Data Tidak Ditemukan"}
+              {" "}
+              You{" "}
+              {getListMemberSuccess
+                ? `and ${parseInt(getListMemberSuccess.count) - 1} Others`
+                : ""}
             </Typography>
-            <Typography>And {(parseInt(totalDatas) - 1) + (countMember)} Others</Typography>
           </div>
           <Button
             color="primary"
             variant="contained"
-            onClick={() => addMember(1)}
+            onClick={() => setDisplayMember(!displayMember)}
           >
-            Add Member
+            {!displayMember ? 'Show Member' : 'Hide'}
           </Button>
         </div>
       </div>
+      {displayMember ? (
+        <ShowMembers
+          member={getListMemberSuccess}
+          loading={getListMemberLoading}
+          error={getListMemberError}
+        />
+      ) : null}
     </Card>
   );
 };

@@ -1,10 +1,6 @@
 import { combineReducers } from "redux";
-import accountReducer from "./accountReducer";
+import member from "./member-reducer/memberReducer";
 
-const reducers = combineReducers(
-  {
-    member: accountReducer,
-  },
-);
-
-export default reducers;
+export default combineReducers({
+  member
+})
