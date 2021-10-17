@@ -3,7 +3,7 @@ import {
 } from '@material-ui/core';
 
 const ContentPage = (props) => {
-  const { children, value, index } = props;
+  const { children, value } = props;
 
   return (
     <div className="pt-4">
