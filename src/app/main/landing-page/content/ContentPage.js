@@ -1,10 +1,9 @@
 import {
   Typography,
-  Card
 } from '@material-ui/core';
 
 const ContentPage = (props) => {
-  const { children, value, index, ...other } = props;
+  const { children, value, index } = props;
 
   return (
     <div className="pt-4">
